@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,5 +66,50 @@ class RestaurantTest {
         assertThrows(itemNotFoundException.class,
                 ()->restaurant.removeFromMenu("French fries"));
     }
+
+    @Test
+    public void get_menu_request_by_user_should_display_restaurant_menu() {
+        assertEquals("[Sweet corn soup:119\n" +
+                ", Vegetable lasagne:269\n" +
+                "]", restaurant.getMenu().toString());
+    }
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>ITEM SELECTION<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+    @Test
+    public void select_menu_items_should_display_total_cost_of_selected_items() throws itemNotFoundException {
+
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        selectedItems.add("Sweet corn soup");
+        selectedItems.add("Vegetable lasagne");
+
+        String totalCost = restaurant.selectMenuItems(selectedItems);
+        assertEquals("Your order will cost: ₹388", totalCost);
+
+        selectedItems.removeAll(selectedItems);
+        totalCost = restaurant.selectMenuItems(selectedItems);
+        assertEquals("Your order will cost: ₹0", totalCost);
+    }
+
+    @Test
+    public void select_menu_items_should_throw_item_not_found_exception_when_selection_item_is_unavailable() {
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        selectedItems.add("Cheese Burger");
+
+        assertThrows(itemNotFoundException.class, () -> restaurant.selectMenuItems(selectedItems));
+    }
+
+    @Test
+    public void select_menu_items_should_throw_item_not_found_exception_when_some_of_the_selected_item_is_unavailable() throws itemNotFoundException {
+        ArrayList<String> selectedItems = new ArrayList<String>();
+        selectedItems.add("Sweet corn soup");
+        selectedItems.add("Vegetable lasagne");
+        selectedItems.add("Cheese Burger");
+
+        assertThrows(itemNotFoundException.class, () -> restaurant.selectMenuItems(selectedItems));
+    }
+
+    //<<<<<<<<<<<<<<<<<<<<<<<ITEM SELECTION>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 }
