@@ -68,7 +68,7 @@ class RestaurantTest {
     }
 
     @Test
-    public void get_menu_request_by_user_should_display_restaurant_menu() {
+    public void get_menu_should_display_restaurant_menu() {
         assertEquals("[Sweet corn soup:119\n" +
                 ", Vegetable lasagne:269\n" +
                 "]", restaurant.getMenu().toString());
@@ -81,12 +81,29 @@ class RestaurantTest {
     @Test
     public void select_menu_items_should_display_total_cost_of_selected_items() throws itemNotFoundException {
 
+        restaurant.addToMenu("French fries", 150);
+        restaurant.addToMenu("Chicken Burger", 210);
+        restaurant.addToMenu("Aalu tikki Burger", 90);
+
         ArrayList<String> selectedItems = new ArrayList<String>();
         selectedItems.add("Sweet corn soup");
         selectedItems.add("Vegetable lasagne");
+        selectedItems.add("Aalu tikki Burger");
 
         String totalCost = restaurant.selectMenuItems(selectedItems);
-        assertEquals("Your order will cost: ₹388", totalCost);
+        assertEquals("Your order will cost: ₹478", totalCost);
+
+        selectedItems.add("Chicken Burger");
+        totalCost = restaurant.selectMenuItems(selectedItems);
+        assertEquals("Your order will cost: ₹688", totalCost);
+
+        selectedItems.add("French fries");
+        totalCost = restaurant.selectMenuItems(selectedItems);
+        assertEquals("Your order will cost: ₹838", totalCost);
+
+        selectedItems.remove("Sweet corn soup");
+        totalCost = restaurant.selectMenuItems(selectedItems);
+        assertEquals("Your order will cost: ₹719", totalCost);
 
         selectedItems.removeAll(selectedItems);
         totalCost = restaurant.selectMenuItems(selectedItems);

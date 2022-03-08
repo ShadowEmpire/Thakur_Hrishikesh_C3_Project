@@ -68,12 +68,17 @@ public class Restaurant {
         return name;
     }
 
-    public String selectMenuItems(ArrayList<String> selectedItems) {
-        return null;
+    public String selectMenuItems(ArrayList<String> selectedItems) throws itemNotFoundException  {
+        return ("Your order will cost: ₹" +  this.calculateSelectedItemsTotalCost(selectedItems));
     }
 
-    private int calculateSelectedItemsTotalCost(ArrayList<String> selectItems){
-        return 0;
+    private int calculateSelectedItemsTotalCost(ArrayList<String> selectItems) throws itemNotFoundException {
+        int totalCost = 0;
+        for (String itemName : selectItems) {
+            Item item = findItemByName(itemName);
+            totalCost += item.getItemPrice();
+        }
+        return totalCost;
     }
 
 }
